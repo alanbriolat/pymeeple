@@ -1,0 +1,165 @@
+tile START {
+    feature Road at N + S
+    feature [c1] City at *E
+    grass at W* + N1 + S2
+    grass at N2 + S1 touching [c1]
+}
+tile A {
+    feature Road at S
+    feature Monastery
+    grass at *
+}
+tile B {
+    feature Monastery
+    grass at *
+}
+tile C {
+    feature City {Shield} at *
+}
+tile D {
+    feature Road at N + S
+    feature [c1] City at *E
+    grass at W* + N1 + S2
+    grass at N2 + S1 touching [c1]
+}
+tile E {
+    feature [c1] City at N*
+    grass at * - N* touching [c1]
+}
+tile F {
+    feature [c1] City {Shield} at *W + *E
+    grass at N* touching [c1]
+    grass at S* touching [c1]
+}
+tile G {
+    feature [c1] City at N* + S*
+    grass at W* touching [c1]
+    grass at E* touching [c1]
+}
+tile H {
+    feature [c1] City at *W
+    feature [c2] City at *E
+    grass at N* + S* touching [c1, c2]
+}
+tile I {
+    feature [c1] City at *E
+    feature [c2] City at S*
+    grass at N* + W* touching [c1, c2]
+}
+tile J {
+    feature Road at E + S
+    feature [c1] City at N*
+    grass at W* + E1 + S2 touching [c1]
+    grass at E2 + S1
+}
+tile K {
+    feature Road at N + W
+    feature [c1] City at *E
+    grass at N1 + W2
+    grass at S* + N2 + W1 touching [c1]
+}
+tile L {
+    feature Road at N
+    feature Road at S
+    feature Road at W
+    feature [c1] City at *E
+    grass at N1 + W2
+    grass at N2 + S1 touching [c1]
+    grass at S2 + W1
+}
+tile M {
+    feature [c1] City {Shield} at N* + *W
+    grass at E* + S* touching [c1]
+}
+tile N {
+    feature [c1] City at N* + *W
+    grass at E* + S* touching [c1]
+}
+tile O {
+    feature Road at E + S
+    feature [c1] City {Shield} at N* + *W
+    grass at E1 + S2 touching [c1]
+    grass at E2 + S1
+}
+tile P {
+    feature Road at E + S
+    feature [c1] City at N* + *W
+    grass at E1 + S2 touching [c1]
+    grass at E2 + S1
+}
+tile Q {
+    feature [c1] City {Shield} at * - S
+    grass at S* touching [c1]
+}
+tile R {
+    feature [c1] City at * - S
+    grass at S* touching [c1]
+}
+tile S {
+    feature Road at S
+    feature [c1] City {Shield} at * - S
+    grass at S1 touching [c1]
+    grass at S2 touching [c1]
+}
+tile T {
+    feature road at S
+    feature [c1] City at * - S
+    grass at S1 touching [c1]
+    grass at S2 touching [c1]
+}
+tile U {
+    feature road at N + S
+    grass at W* + N1 + S2
+    grass at E* + N2 + S1
+}
+tile V {
+    feature road at S + W
+    grass at N* + E* + S1 + W2
+    grass at S2 + W1
+}
+tile W {
+    feature Road at E
+    feature Road at S
+    feature Road at W
+    grass at N* + W2 + E1
+    grass at E2 + S1
+    grass at S2 + W1
+}
+tile X {
+    feature Road at N
+    feature Road at E
+    feature Road at S
+    feature Road at W
+    grass at N2 + E1
+    grass at E2 + S1
+    grass at S2 + W1
+    grass at W2 + N1
+}
+
+tileset BASE {
+    START
+    A * 2
+    B * 4
+    C
+    D * 3
+    E * 5
+    F * 2
+    G
+    H * 3
+    I * 2
+    J * 3
+    K * 3
+    L * 3
+    M * 2
+    N * 3
+    O * 2
+    P * 3
+    Q
+    R * 3
+    S * 2
+    T
+    U * 8
+    V * 9
+    W * 4
+    X
+}
