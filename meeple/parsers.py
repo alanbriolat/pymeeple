@@ -2,7 +2,7 @@ import fnmatch
 
 import parsley
 
-from .tileset import FeatureAttachment, GrassAttachment
+from . import tileset
 
 
 def enum_match_set(enum, expr):
@@ -14,8 +14,12 @@ def enum_match_set(enum, expr):
 
 
 tileset_parser_bindings = {
-    'get_feature_direction': lambda x: enum_match_set(FeatureAttachment, x),
-    'get_grass_direction': lambda x: enum_match_set(GrassAttachment, x),
+    'TileFeature': tileset.TileFeature,
+    'TileGrass': tileset.TileGrass,
+    'create_feature': lambda name, subfeatures: tileset.Feature.get_class(name)(subfeatures),
+    'create_subfeature': lambda name: tileset.Subfeature.get_class(name)(),
+    'get_feature_direction': lambda x: enum_match_set(tileset.FeatureAttachment, x),
+    'get_grass_direction': lambda x: enum_match_set(tileset.GrassAttachment, x),
 }
 
 
@@ -38,16 +42,18 @@ grass_directions = grass_directions:rest sp* '+' sp* grass_direction:this -> res
 grass_attachment = sp+ 'at' sp+ grass_directions
 
 feature_id = sp+ '[' sp* identifier:id sp* ']' -> id
-subfeatures = sp+ '{' sp* identifier:first (sp* ',' sp* identifier)*:rest sp* '}' -> [first] + rest
-feature = 'feature' feature_id?:id sp+ identifier:kind subfeatures?:subf feature_attachment?:attach -> (id, kind, subf, attach)
+subfeature = identifier:id -> create_subfeature(id)
+subfeatures = sp+ '{' sp* subfeature:first (sp* ',' sp* subfeature)*:rest sp* '}' -> [first] + rest
+feature = 'feature' feature_id?:id sp+ identifier:kind subfeatures?:subf feature_attachment?:attach
+        -> TileFeature(create_feature(kind, subf), attach, id)
 
 touching = sp+ 'touching' sp+ '[' sp* identifier:first (sp* ',' sp* identifier)*:rest sp* ']' -> [first] + rest
-grass = 'grass' grass_attachment:attach touching?:touching -> ('grass', attach, touching)
+grass = 'grass' grass_attachment:attach touching?:touching -> TileGrass(attach, touching)
 
 feature_or_grass = ws* (feature | grass)
 features = '{' feature_or_grass:first (sp* (nl | ',') feature_or_grass)*:rest ws* '}' -> [first] + rest
 
-tiledef = 'tile' sp+ identifier:id ws+ features:features -> ('tile', id, features)
+tiledef = 'tile' sp+ identifier:id ws+ features:features -> ('tiledef', id, features)
 
 use_tile = ws* identifier:id ( sp* '*' sp* int:n -> (id, n)
                              | -> (id, 1))
@@ -60,6 +66,19 @@ toplevel = tiledef_or_tileset:first (ws+ tiledef_or_tileset)*:rest ws* end -> [f
 """, tileset_parser_bindings)
 
 
+def load_tilesets(stream):
+    items = tileset_parser(stream.read()).toplevel()
+    collection = tileset.TileCollection(tileset.Tile(id, contains)
+                                        for k, id, contains in items
+                                        if k == 'tiledef')
+    tilesets = [collection.create_tileset(id, contains)
+                for k, id, contains in items
+                if k == 'tileset']
+    return collection, tilesets
+
+
 if __name__ == '__main__':
     import sys, pprint
-    pprint.pprint(tileset_parser(open(sys.argv[1]).read()).toplevel())
+    collection, tilesets = load_tilesets(open(sys.argv[1]))
+    pprint.pprint(collection)
+    pprint.pprint(tilesets)

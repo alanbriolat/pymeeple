@@ -102,18 +102,18 @@ tile S {
     grass at S2 touching [c1]
 }
 tile T {
-    feature road at S
+    feature Road at S
     feature [c1] City at * - S
     grass at S1 touching [c1]
     grass at S2 touching [c1]
 }
 tile U {
-    feature road at N + S
+    feature Road at N + S
     grass at W* + N1 + S2
     grass at E* + N2 + S1
 }
 tile V {
-    feature road at S + W
+    feature Road at S + W
     grass at N* + E* + S1 + W2
     grass at S2 + W1
 }
